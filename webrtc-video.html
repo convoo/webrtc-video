@@ -1,0 +1,44 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../webrtc-stream/webrtc-stream.html">
+<link rel="import" href="../live-video/live-video.html">
+
+<!--
+An element providing access to a user's getUserMedia stream and displaying the video
+
+Example:
+
+    <webrtc-video></webrtc-video>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="webrtc-video">
+<template>
+    <style>
+    :host {
+        display: block;
+        box-sizing: border-box;
+        width: 400px;
+        height: 400px;
+    }
+    </style>
+    <webrtc-stream stream="{{stream}}"></webrtc-stream>
+    <p>{{stream}}</p>
+    <live-video
+        src$="{{stream}}"
+        width="200"
+        height="200"
+        mirror="false"
+        mute="false"
+        disable="false"
+    >
+    </live-video>
+</template>
+
+<script>
+    Polymer({
+        is: 'webrtc-video',
+    });
+  </script>
+</dom-module>
