@@ -22,7 +22,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.2.0",
-    "webrtc-stream": "^0.0.1",
+    "webrtc-stream": "^0.0.2",
     "live-video": "^0.0.2"
   },
   "devDependencies": {
