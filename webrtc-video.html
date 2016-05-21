@@ -3,7 +3,7 @@
 <link rel="import" href="../live-video/live-video.html">
 
 <!--
-An element providing access to a user's getUserMedia stream and displaying the video
+An element displaying video from a user's stream
 
 Example:
 
@@ -15,30 +15,147 @@ Example:
 
 <dom-module id="webrtc-video">
 <template>
-    <style>
+  <style>
     :host {
-        display: block;
-        box-sizing: border-box;
-        width: 400px;
-        height: 400px;
+      display: block;
+      box-sizing: border-box;
     }
     </style>
     <webrtc-stream stream="{{stream}}"></webrtc-stream>
-    <p>{{stream}}</p>
-    <live-video
-        src$="{{stream}}"
-        width="200"
-        height="200"
-        mirror="false"
-        mute="false"
-        disable="false"
-    >
-    </live-video>
+    <live-video 
+      src="{{stream}}"
+      debug="{{debug}}"
+      canvas= "{{canvas}}"
+      mute="{{mute}}" 
+      disable="{{disable}}" 
+      mirror="{{mirror}}" 
+      width="{{width}}" 
+      height="{{height}}"
+      volume="{{volume}}"
+      css-filter="{{cssFilter}}"
+      canvas-filter="{{canvasFilter}}"
+      fps = {{fps}}
+      maintain-aspect-ratio="{{maintainAspectRatio}}"></live-video>
 </template>
 
 <script>
     Polymer({
-        is: 'webrtc-video',
+      is: 'webrtc-video',
+      properties: {
+        /**
+         * `width` indicates the width of the video display,
+         */
+        width: {
+          type: Number, 
+          value:320,
+          notify: true,
+          reflectToAttribute: true,
+        },
+        
+        /**
+         * `height` indicates the height of the video display,
+         */
+        height: {
+          type: Number, 
+          value:180,
+          notify: true,
+          reflectToAttribute: true,
+        },
+        
+        /**
+         * `mirror` indicates whether the video display is mirrored.
+         */
+        mirror: {
+          type:Boolean, 
+          notify: true,
+          reflectToAttribute: true,
+        },
+        
+        /**
+         * `mute` indicates whether the audio is muted on the video display,
+         */
+        mute: {
+          type:Boolean, 
+          notify: true,
+          reflectToAttribute: true,
+        },
+        
+        /**
+         * `disable` indicates whether the video is stopped,
+         */
+        disable: {
+          type:Boolean, 
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `maintain-aspect-ratio` indicates whether the video will keep the source's aspect ratio or use entered height and width. 
+         * Initially, if selected, the height/width will be set to 0.75. In order to work off of the video source this must be used
+         * later on.
+         */
+        maintainAspectRatio: {
+          type:Boolean, 
+          notify: true,
+          reflectToAttribute: true,
+        },
+        /**
+         * `src` is the source of the video,
+         */
+        src: {
+          type:String,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `volume` is a value between 0 and 1 specifying the volume of the video player,
+         */
+        volume: {
+          type: Number,
+          notify: true,
+          reflectToAttribute: true,
+        },
+        /**
+         * `debug` displays the debug values for the video feed,
+         */
+        debug: {
+          type:Boolean,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `filter` specifies the active filter on the video display, Available options are: grayscale, blur, sepia, tint, inkwell, hue-rotate, invert, saturate, sharpen 
+         */
+        cssFilter: {
+          type:String,
+          notify: true,
+          reflectToAttribute: true,
+        },
+        /**
+         * `canvasFilter` specifies the active filter on the canvas display, Available options are: grayscale, blur, sepia, tint, inkwell, hue-rotate, invert, saturate, sharpen
+         */
+        canvasFilter: {
+          type:String,
+          notify: true,
+          reflectToAttribute: true,
+        },
+        /**
+         * `canvas` specifies whether you are using a canvas or html video element
+         */
+        canvas: {
+          type:Boolean,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `fps` (frames per second) specifies the number of images (frames) that are sent to the canvas per second
+         * Requires canvas set to true.
+         */
+        fps: {
+          type:Number,
+          notify: true,
+          reflectToAttribute: true
+        },
+      }
     });
   </script>
 </dom-module>
