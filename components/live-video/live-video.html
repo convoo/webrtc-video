@@ -1,0 +1,386 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+An element providing more control for video that's received from a live source.
+
+Example:
+
+    <live-video></live-video>
+
+Example:
+
+    <live-video
+      width="200"
+      height="200"
+      mirror="false"
+      mute
+      disable
+    >
+    </live-video>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="live-video">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      
+      #liveVideo, liveCanvas {
+        background: black;
+      }
+      
+      .mirrorVideo{
+        transform: rotateY(180deg);
+        -webkit-transform:rotateY(180deg);
+        -moz-transform:rotateY(180deg);
+      }
+      
+      .grayscale {
+        filter: grayscale(100%);
+        -webkit-filter: grayscale(100%);
+      }
+      
+      .blur {
+        -webkit-filter: blur(4px)  contrast(0.75);
+        filter: blur(4px)  contrast(0.75);
+        mix-blend-mode: overlay;
+      }
+      
+      .sepia {
+        -webkit-filter: sepia(1);
+        filter: sepia(1);
+      }
+      
+      .tint {
+        -webkit-filter: sepia(1) hue-rotate(200deg);
+        filter: sepia(1) hue-rotate(200deg);
+      }
+      
+      .inkwell {
+        -webkit-filter: grayscale(1) brightness(0.45) contrast(1.05);
+        filter: grayscale(1) brightness(0.45) contrast(1.05);
+      }
+      
+      .hue-rotate {
+        -webkit-filter: hue-rotate(90deg);
+        filter: hue-rotate(90deg);
+      }
+      
+      .invert {
+        -webkit-filter: invert(.8);
+        filter: invert(.8);
+      }
+      
+      .saturate {
+        -webkit-filter: saturate(4);
+        filter: saturate(4);
+      }
+      
+      .will-trippy {
+        -webkit-filter: blur(6px) brightness(1) contrast(10) grayscale(0.1) hue-rotate(0deg) invert(0.15) opacity(100%) saturate(10) sepia(1) drop-shadow(0px 0px 5px #000);
+        filter: blur(6px) brightness(1) contrast(10) grayscale(0.1) hue-rotate(0deg) invert(0.15) opacity(100%) saturate(10) sepia(1) drop-shadow(0px 0px 5px #000);
+      }
+      
+      .saad-trippy {
+        -webkit-filter: blur(0px) brightness(1.3) contrast(1) grayscale(0.5) hue-rotate(180deg) invert(1) opacity(100%) saturate(7.7) sepia(0.32) drop-shadow(9px 9px 5px #000);
+        filter: blur(0px) brightness(1.3) contrast(1) grayscale(0.5) hue-rotate(180deg) invert(1) opacity(100%) saturate(7.7) sepia(0.32) drop-shadow(9px 9px 5px #000)
+      }
+      
+      .sharpen {
+        -webkit-filter: blur(4px) invert(1) contrast(0.75);
+        filter: blur(4px) invert(1) contrast(0.75);
+        mix-blend-mode: overlay;
+      }
+      
+      canvas {
+        background: black;
+      }
+    </style>
+    
+    <div hidden="{{!debug}}">
+    Mute: {{mute}}, Width: {{width}}, Height: {{height}}, Mirror: {{mirror}}, Maintain AR {{maintainAspectRatio}} Volume {{volume}} cssFilter {{cssFilter}} canvasFilter {{canvasFilter}}<br>
+    </div>
+    <video 
+      src$="{{src}}" 
+      id="liveVideo" 
+      muted$="{{mute}}" 
+      width$="{{width}}" 
+      height$="{{height}}" 
+      volume="{{volume}}" 
+      hidden="{{hideVideo}}"
+      autoplay></video>
+    <canvas id="liveCanvas" width$="{{width}}" height$="{{height}}" hidden="{{hideCanvas}}"></canvas>
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'live-video',
+
+      properties: {
+        /**
+         * `width` indicates the width of the video display,
+         */
+        width: {
+          type: Number, 
+          value:320,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_widthChanged'
+        },
+        
+        /**
+         * `height` indicates the height of the video display,
+         */
+        height: {
+          type: Number, 
+          value:180,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_heightChanged'
+        },
+        
+        /**
+         * `mirror` indicates whether the video display is mirrored.
+         */
+        mirror: {
+          type:Boolean, 
+          value:true,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_mirrorChanged'
+        },
+        
+        /**
+         * `mute` indicates whether the audio is muted on the video display,
+         */
+        mute: {
+          type:Boolean, 
+          value:false,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_muteChanged'
+        },
+        
+        /**
+         * `disable` indicates whether the video is stopped,
+         */
+        disable: {
+          type:Boolean, 
+          value:false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `maintain-aspect-ratio` indicates whether the video will keep the source's aspect ratio or use entered height and width. 
+         * Initially, if selected, the height/width will be set to 0.75. In order to work off of the video source this must be used
+         * later on.
+         */
+        maintainAspectRatio: {
+          type:Boolean, 
+          value: false,
+          notify: true,
+          reflectToAttribute: true,
+          observer: "_maintainAspectRatioChanged"
+        },
+        /**
+         * `src` is the source of the video,
+         */
+        src: {
+          type:String,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `volume` is a value between 0 and 1 specifying the volume of the video player,
+         */
+        volume: {
+          type: Number,
+          value: 1,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_volumeChanged'
+        },
+        /**
+         * `debug` displays the debug values for the video feed,
+         */
+        debug: {
+          type:Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `filter` specifies the active filter on the video display, Available options are: grayscale, blur, sepia, tint, inkwell, hue-rotate, invert, saturate, sharpen 
+         */
+        cssFilter: {
+          type:String,
+          value: "",
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_filterChanged'
+        },
+        /**
+         * `canvasFilter` specifies the active filter on the canvas display, Available options are: grayscale, blur, sepia, tint, inkwell, hue-rotate, invert, saturate, sharpen
+         */
+        canvasFilter: {
+          type:String,
+          value: "",
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_canvasFilterChanged'
+        },
+        /**
+         * `canvas` specifies whether you are using a canvas or html video element
+         */
+        canvas: {
+          type:Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `fps` (frames per second) specifies the number of images (frames) that are sent to the canvas per second
+         * Requires canvas set to true.
+         */
+        fps: {
+          type:Number,
+          value: 10,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * Computes whether to show or hide the video
+         */
+        hideVideo: {
+          type: Boolean,
+          computed: "_isVideoHidden(disable, canvas)"
+        },
+        /**
+         * Computes whether to show or hide the canvas
+         */
+        hideCanvas: {
+          type: Boolean,
+          computed: "_isCanvasHidden(disable, canvas)"
+        }
+      },
+      
+      listeners: {
+        'liveVideo.play': 'pushToCanvas'
+      },
+
+      // Element Lifecycle
+
+      ready: function() {
+        // `ready` is called after all elements have been configured, but
+        // propagates bottom-up. This element's children are ready, but parents
+        // are not.
+        //
+        // This is the point where you should make modifications to the DOM (when
+        // necessary), or kick off any processes the element wants to perform.
+      },
+
+      attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+        
+        if(this.filter != "" &&  this.filter != undefined){
+          this.$.liveVideo.classList.add(this.filter);
+        }
+        
+        if(this.mirror){
+          this.$.liveVideo.classList.add("mirrorVideo");
+          this.$.liveCanvas.classList.add("mirrorVideo");
+        };
+      },
+
+      detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+      },
+      
+      _heightChanged: function(newVal,oldVal){
+        if(this.maintainAspectRatio){
+          var aspectRatio = isNaN(this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth) ? 0.75 : this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth;
+          this.width = newVal / aspectRatio;
+        }
+        
+      },
+      _widthChanged: function(newVal,oldVal){
+        if(this.maintainAspectRatio){
+          var aspectRatio = isNaN(this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth) ? 0.75 : this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth;
+          this.height = newVal * aspectRatio;
+        }
+      },
+      _mirrorChanged: function(newVal, oldVal){
+        if(newVal){
+          this.$.liveVideo.classList.add("mirrorVideo");
+          this.$.liveCanvas.classList.add("mirrorVideo");
+        }else {
+          this.$.liveVideo.classList.remove("mirrorVideo");
+          this.$.liveCanvas.classList.remove("mirrorVideo");
+        }
+      },
+      _muteChanged: function(newVal, oldVal){
+        this.$.liveVideo.muted = newVal;
+      },
+      _maintainAspectRatioChanged: function(newVal, oldVal){
+        var aspectRatio = isNaN(this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth) ? 0.75 : this.$.liveVideo.videoHeight / this.$.liveVideo.videoWidth;
+        if(newVal){
+          if(this.height / this.width > aspectRatio){
+            this.width = this.height / aspectRatio;
+          } else {
+            this.height = this.width * aspectRatio;
+          }
+        }
+      },
+      _volumeChanged: function(newVal, oldVal){
+        this.$.liveVideo.volume = newVal;
+      },
+      _filterChanged: function(newVal, oldVal){
+        if(oldVal != "" && typeof(oldVal) != 'undefined'){
+          this.$.liveVideo.classList.remove(oldVal);
+        }
+        if(newVal != "" && typeof(newVal) != 'undefined'){
+          this.$.liveVideo.classList.add(newVal);
+        }
+      },
+      _canvasFilterChanged: function(newVal, oldVal){
+        if(oldVal != "" && typeof(oldVal) != 'undefined'){
+          this.$.liveCanvas.classList.remove(oldVal);
+        }
+        if(newVal != "" && typeof(newVal) != 'undefined'){
+          this.$.liveCanvas.classList.add(newVal);
+        }
+      },
+      _isVideoHidden: function(disable, canvas){
+        return disable || canvas;
+      },
+      _isCanvasHidden: function(disable, canvas){
+        return disable || !canvas;
+      },
+      /**
+       * Pushes images from the video to the canvas at the set fps
+       */
+      pushToCanvas: function(){
+        var video = this.$.liveVideo;
+        var canvas = this.$.liveCanvas.getContext("2d");
+        setInterval(function(){
+          var ratio = video.videoWidth / video.videoHeight;
+          canvas.drawImage(video, 0, 0, this.width, this.height)
+        }.bind(this), 1000 / this.fps);
+      }
+
+    });
+  </script>
+</dom-module>

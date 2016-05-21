@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>live-video Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../live-video.html">
+  </head>
+  <body unresolved>
+    <dom-module id="demo">
+      <template is="dom-bind" id="demo-template">
+        
+        <div style="padding: 10px; margin:5px;">
+          You can edit the &#60;live-video&#62; element by updating the following inputs:<br>
+          <label>Debug</label><input type="checkbox" checked="{{debug::change}}"><br>
+          <label>Canvas</label><input type="checkbox" checked="{{canvas::change}}"><br>
+          <label>Mute</label><input type="checkbox" checked="{{mute::change}}"><br>
+          <label>Disable</label><input type="checkbox" checked="{{disable::change}}"><br>
+          <label>Mirror</label><input type="checkbox" checked="{{mirror::change}}"><br>
+          <label>Maintain Aspect Ratio</label><input type="checkbox" checked="{{ar::change}}"><br>
+          <label>Width</label><input type="number" value="{{width::input}}" min="0"><br>
+          <label>Height</label><input type="number" value="{{height::input}}" min="0"><br>
+          <label>Volume</label><input type="range" min="0" max="1" step="0.05" value="{{volume::change}}"><br>
+          <label>CSS Filter</label>
+          <select value="{{filter::change}}">
+              <option value="">None</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="blur">Blur</option>
+              <option value="sepia">Sepia</option>
+              <option value="tint">Tint</option>
+              <option value="inkwell">Inkwell</option>
+              <option value="hue-rotate">Hue Rotate</option>
+              <option value="invert">Invert</option>
+              <option value="saturate">Saturate</option>
+              <option value="sharpen">Sharpen</option>
+          </select><br>
+          
+          <label>Canvas Filter</label>
+          <select value="{{canvasFilter::change}}">
+              <option value="">None</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="blur">Blur</option>
+              <option value="sepia">Sepia</option>
+              <option value="tint">Tint</option>
+              <option value="inkwell">Inkwell</option>
+              <option value="hue-rotate">Hue Rotate</option>
+              <option value="invert">Invert</option>
+              <option value="saturate">Saturate</option>
+              <option value="sharpen">Sharpen</option>
+          </select><br>
+        </div>
+        
+        <live-video 
+          src="http://vjs.zencdn.net/v/oceans.webm"
+          debug="{{debug}}"
+          canvas= "{{canvas}}"
+          mute="{{mute}}" 
+          disable="{{disable}}" 
+          mirror="{{mirror}}" 
+          width="{{width}}" 
+          height="{{height}}" 
+          stream="{{stream}}" 
+          volume="{{volume}}"
+          css-filter="{{filter}}"
+          canvas-filter="{{canvasFilter}}"
+          maintain-aspect-ratio="{{ar}}"></live-video>
+          
+      </template>
+    </dom-module>
+  </body>
+</html>

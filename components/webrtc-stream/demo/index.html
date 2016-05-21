@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>webrtc-stream Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../webrtc-stream.html">
+  </head>
+  <body unresolved>
+    
+    <dom-module id="demo">
+      <template is="dom-bind" id="demo-template">
+        
+        <p>An example of <code>&lt;webrtc-stream&gt;</code>:</p>
+        <webrtc-stream stream="{{stream}}" stream-url="{{sUrl}}"></webrtc-stream>
+        {{stream}}
+        
+        <p>Here it is shown on a muted autoplayed video element</p>
+        <video src="{{sUrl}}" autoplay muted></video>
+
+    <script>
+
+    </script>
+
+  </body>
+</html>

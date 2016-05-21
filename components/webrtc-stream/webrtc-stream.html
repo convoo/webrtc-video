@@ -1,0 +1,100 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+    
+
+An element providing access to a user's getUserMedia stream.
+
+Example:
+
+    <webrtc-stream stream="{{userStream}}" stream-url="{{userStreamUrl}}"></webrtc-stream>
+
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="webrtc-stream">
+  <template>
+      
+  </template>
+
+  <script>
+    Polymer({
+      is: 'webrtc-stream',
+
+      properties: {
+        /**
+         * `streamUrl` is the blob url to the user's stream. Null if user browser doesn't support getUserMedia or if user rejected access.
+         */
+        streamUrl: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `stream` is the blob of the user's stream. Null if user browser doesn't support getUserMedia or if user rejected access.
+         */
+        stream: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        }
+      },
+
+      // Element Lifecycle
+
+      ready: function() {
+        // `ready` is called after all elements have been configured, but
+        // propagates bottom-up. This element's children are ready, but parents
+        // are not.
+        //
+        // This is the point where you should make modifications to the DOM (when
+        // necessary), or kick off any processes the element wants to perform.
+      },
+
+      attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+        
+        function hasGetUserMedia() {
+          return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        }
+        
+        if (hasGetUserMedia()) {
+          navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+          navigator.getUserMedia(
+            // Settings
+            {
+              audio: true, 
+              video: true
+            },
+            // Positive scenario
+            function(stream) {
+              this.stream = stream
+              this.streamUrl = window.URL.createObjectURL(stream);
+            }.bind(this),
+            // Error scenario
+            function(error){
+              console.log('Access rejected by user')
+            }
+          );
+        } else {
+          console.log('Your browser is not supported, please update to the lastest Chrome or Firefox', error);
+        }
+      },
+
+      detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+      },
+
+    });
+  </script>
+</dom-module>

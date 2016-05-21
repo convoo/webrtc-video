@@ -1,0 +1,32 @@
+{
+  "name": "webrtc-video",
+  "version": "0.0.2",
+  "authors": [
+    "Will in China <email.will.in.china@gmail.com>",
+    "Saad Elbeleidy <sbeleidy90@gmail.com>"
+  ],
+  "description": "An element displaying video from a user's stream",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed",
+    "webrtc",
+    "getUserMedia"
+  ],
+  "main": "webrtc-video.html",
+  "license": "MIT",
+  "homepage": "https://github.com/convoo/webrtc-video",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "webrtc-stream": "^0.0.2",
+    "live-video": "^0.0.2"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  }
+}

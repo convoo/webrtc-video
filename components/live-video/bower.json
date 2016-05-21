@@ -1,0 +1,28 @@
+{
+  "name": "live-video",
+  "version": "1.0.7",
+  "authors": [
+    "Will in China <email.will.in.china@gmail.com>",
+    "Saad Elbeleidy <sbeleidy90@gmail.com>"
+  ],
+  "description": "An element providing more control for video that's received from a live source.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "live-video.html",
+  "license": "MIT",
+  "homepage": "https://github.com/convoo/live-video/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "^4.0.0"
+  }
+}
