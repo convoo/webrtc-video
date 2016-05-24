@@ -35,7 +35,8 @@ Example:
       css-filter="{{cssFilter}}"
       canvas-filter="{{canvasFilter}}"
       fps = {{fps}}
-      maintain-aspect-ratio="{{maintainAspectRatio}}"></live-video>
+      maintain-aspect-ratio="{{maintainAspectRatio}}"
+      responsive="{{responsive}}"></live-video>
 </template>
 
 <script>
@@ -152,6 +153,14 @@ Example:
          */
         fps: {
           type:Number,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `responsive` determines whether the video element changes size depending on its parent element
+         */
+        responsive: {
+          type:Boolean,
           notify: true,
           reflectToAttribute: true
         },
