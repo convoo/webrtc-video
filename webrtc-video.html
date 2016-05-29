@@ -36,7 +36,8 @@ Example:
       canvas-filter="{{canvasFilter}}"
       fps = {{fps}}
       maintain-aspect-ratio="{{maintainAspectRatio}}"
-      responsive="{{responsive}}"></live-video>
+      responsive="{{responsive}}"
+      fullbleed="{{fullbleed}}"></live-video>
 </template>
 
 <script>
@@ -160,6 +161,14 @@ Example:
          * `responsive` determines whether the video element changes size depending on its parent element
          */
         responsive: {
+          type:Boolean,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `fullbleed` determines whether the video element takes up the full size of the parent
+         */
+        fullbleed: {
           type:Boolean,
           notify: true,
           reflectToAttribute: true
