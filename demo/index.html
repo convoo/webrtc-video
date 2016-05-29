@@ -20,6 +20,7 @@
           <label>Mirror</label><input type="checkbox" checked="{{mirror::change}}"><br>
           <label>Maintain Aspect Ratio</label><input type="checkbox" checked="{{ar::change}}"><br>
           <label>Responsive</label><input type="checkbox" checked="{{responsive::change}}"><br>
+          <label>Fullbleed</label><input type="checkbox" checked="{{fullbleed::change}}"><br>
           <label>Width</label><input type="number" value="{{width::input}}" min="0"><br>
           <label>Height</label><input type="number" value="{{height::input}}" min="0"><br>
           <label>Volume</label><input type="range" min="0" max="1" step="0.05" value="{{volume::change}}"><br>
@@ -62,7 +63,8 @@
           css-filter="{{filter}}"
           canvas-filter="{{canvasFilter}}"
           maintain-aspect-ratio="{{ar}}"
-          responsive="{{responsive}}"></webrtc-video>
+          responsive="{{responsive}}"
+          fullbleed="{{fullbleed}}"></webrtc-video>
           
       </template>
     </dom-module>
